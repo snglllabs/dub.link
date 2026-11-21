@@ -361,6 +361,38 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
 
+      // Self-hosted: restrict sign-ups to allowlisted emails, existing users,
+      // or emails with a pending workspace invite
+      const allowedSignupEmails = (process.env.ALLOWED_SIGNUP_EMAILS ?? "")
+        .split(",")
+        .map((email) => email.trim().toLowerCase())
+        .filter(Boolean);
+
+      if (allowedSignupEmails.length > 0) {
+        const normalizedEmail = user.email.toLowerCase();
+
+        if (!allowedSignupEmails.includes(normalizedEmail)) {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email },
+            select: { id: true },
+          });
+
+          const invite = existingUser
+            ? null
+            : await prisma.projectInvite.findFirst({
+                where: { email: user.email },
+                select: { email: true },
+              });
+
+          if (!existingUser && !invite) {
+            console.log(
+              `Blocked sign-up for non-allowlisted email: ${user.email}`,
+            );
+            return false;
+          }
+        }
+      }
+
       if (user?.lockedAt) {
         throw new Error("exceeded-login-attempts");
       }
