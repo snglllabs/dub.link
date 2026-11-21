@@ -11,22 +11,25 @@ export const sendViaNodeMailer = async ({
 }: Pick<CreateEmailOptions, "subject" | "text" | "react"> & {
   to: string;
 }) => {
+  const port = Number(process.env.SMTP_PORT || 587);
+
   const transporter = nodemailer.createTransport({
     // @ts-ignore (Fix this)
     host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    port,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSWORD,
     },
-    secure: false,
+    secure: port === 465,
+    requireTLS: port === 587,
     tls: {
       rejectUnauthorized: false,
     },
   });
 
   return await transporter.sendMail({
-    from: "noreply@example.com",
+    from: process.env.SMTP_FROM || "noreply@example.com",
     to,
     subject,
     text,
