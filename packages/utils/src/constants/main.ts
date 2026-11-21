@@ -1,9 +1,14 @@
-export const SHORT_DOMAIN = "dub.sh";
+const APP_HOSTNAME = process.env.NEXT_PUBLIC_APP_DOMAIN || "app.dub.co";
+const SHORT_HOSTNAME = process.env.NEXT_PUBLIC_APP_SHORT_DOMAIN || "dub.sh";
+const APP_ORIGIN = `https://${APP_HOSTNAME}`;
+
+export const SHORT_DOMAIN = SHORT_HOSTNAME;
 
 export const API_HOSTNAMES = new Set([
   "api.dub.co",
   "api-staging.dub.co",
   `api.${SHORT_DOMAIN}`,
+  `api.${APP_HOSTNAME}`,
   "api.localhost:8888",
   "api.localhost",
 ]);
@@ -16,24 +21,15 @@ export const API_DOMAIN =
       : "http://api.localhost:8888";
 
 export const APP_DOMAIN =
-  process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
-    ? "https://app.dub.co"
-    : process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL || "preview.dub.co"}`
-      : "http://localhost:8888";
+  process.env.NEXT_PUBLIC_APP_DOMAIN || process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
+    ? APP_ORIGIN
+    : "http://localhost:8888";
 
 export const APP_DOMAIN_WITH_NGROK =
-  process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
-    ? "https://app.dub.co"
-    : process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL || "preview.dub.co"}`
-      : process.env.NEXT_PUBLIC_NGROK_URL || "http://localhost:8888";
+  process.env.NEXT_PUBLIC_NGROK_URL || APP_DOMAIN;
 
 export const isAppHostname = (hostname: string) => {
-  if (process.env.NEXT_PUBLIC_VERCEL_ENV === "preview") {
-    // pattern of our preview URLs are always "dub-<random-string>.dub.co"
-    return hostname.startsWith("dub-") && hostname.endsWith(".dub.co");
-  }
+  if (hostname === APP_HOSTNAME) return true;
   return new Set(["app.dub.co", "localhost:8888", "localhost"]).has(hostname);
 };
 
