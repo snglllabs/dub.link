@@ -329,7 +329,7 @@ export function Nav({
               ) : !isLoading ? (
                 <>
                   <Link
-                    href="https://app.dub.co/login"
+                    href={`${APP_DOMAIN}/login`}
                     className={cn(
                       buttonVariants({ variant: "secondary" }),
                       "flex h-8 items-center rounded-lg border px-4 text-sm",
@@ -339,7 +339,7 @@ export function Nav({
                     Log in
                   </Link>
                   <Link
-                    href="https://app.dub.co/register"
+                    href={`${APP_DOMAIN}/register`}
                     className={cn(
                       buttonVariants({ variant: "primary" }),
                       "flex h-8 items-center rounded-lg border px-4 text-sm",
