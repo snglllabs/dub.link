@@ -101,6 +101,9 @@ module.exports = withPlausibleProxy({
       {
         hostname: "media.cleanshot.cloud", // only for staging purposes
       },
+      {
+        hostname: "short.sngll.org",
+      },
     ],
   },
   async headers() {
@@ -140,7 +143,7 @@ module.exports = withPlausibleProxy({
         missing: [
           {
             type: "host",
-            value: ".*(\\.dub\\.co|localhost)",
+            value: ".*(\\.dub\\.co|localhost|sngll\\.org)",
           },
         ],
         destination: "/",
