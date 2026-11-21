@@ -1,15 +1,21 @@
+const APP_HOSTNAME = process.env.NEXT_PUBLIC_APP_DOMAIN || "app.dub.co";
+const SHORT_HOSTNAME = process.env.NEXT_PUBLIC_APP_SHORT_DOMAIN || "dub.sh";
+
+const APP_ORIGIN = `https://${APP_HOSTNAME}`;
+const HOME_ORIGIN = `https://${SHORT_HOSTNAME}`;
+
 export const DEFAULT_REDIRECTS = {
-  home: "https://dub.co",
-  dub: "https://dub.co",
-  signin: "https://app.dub.co/login",
-  login: "https://app.dub.co/login",
-  register: "https://app.dub.co/register",
-  signup: "https://app.dub.co/register",
-  app: "https://app.dub.co",
-  dashboard: "https://app.dub.co",
-  links: "https://app.dub.co/links",
-  settings: "https://app.dub.co/settings",
-  welcome: "https://app.dub.co/onboarding/welcome",
+  home: HOME_ORIGIN,
+  dub: HOME_ORIGIN,
+  signin: `${APP_ORIGIN}/login`,
+  login: `${APP_ORIGIN}/login`,
+  register: `${APP_ORIGIN}/register`,
+  signup: `${APP_ORIGIN}/register`,
+  app: APP_ORIGIN,
+  dashboard: APP_ORIGIN,
+  links: `${APP_ORIGIN}/links`,
+  settings: `${APP_ORIGIN}/settings`,
+  welcome: `${APP_ORIGIN}/onboarding/welcome`,
   discord: "https://twitter.com/dubdotco", // placeholder for now
 };
 
