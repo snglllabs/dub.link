@@ -133,7 +133,7 @@ const pillSpring = {
   opacity: { duration: 0 },
 };
 
-// dub.co's session route returns 401 when logged out — cache that as "no session"
+// The session route returns 401 when logged out — cache that as "no session"
 // so revalidation never resets `isLoading` (which unmounts the CTA buttons).
 // Other failures throw, so SWR keeps whatever session it already has.
 const sessionFetcher = async (url: string) => {
@@ -171,7 +171,7 @@ export function Nav({
   const scrolled = useScroll(40);
   const pathname = usePathname();
   const { data: session, isLoading } = useSWR(
-    domain.endsWith("dub.co") && "/api/auth/session",
+    "/api/auth/session",
     sessionFetcher,
     {
       dedupingInterval: 60000,
@@ -327,28 +327,16 @@ export function Nav({
                   Dashboard
                 </Link>
               ) : !isLoading ? (
-                <>
-                  <Link
-                    href={`${APP_DOMAIN}/login`}
-                    className={cn(
-                      buttonVariants({ variant: "secondary" }),
-                      "flex h-8 items-center rounded-lg border px-4 text-sm",
-                      "dark:border-white/10 dark:bg-black dark:text-white dark:hover:bg-neutral-900",
-                    )}
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href={`${APP_DOMAIN}/register`}
-                    className={cn(
-                      buttonVariants({ variant: "primary" }),
-                      "flex h-8 items-center rounded-lg border px-4 text-sm",
-                      "dark:border-white dark:bg-white dark:text-black dark:hover:bg-neutral-50 dark:hover:ring-white/10",
-                    )}
-                  >
-                    Sign up
-                  </Link>
-                </>
+                <Link
+                  href={`${APP_DOMAIN}/login`}
+                  className={cn(
+                    buttonVariants({ variant: "secondary" }),
+                    "flex h-8 items-center rounded-lg border px-4 text-sm",
+                    "dark:border-white/10 dark:bg-black dark:text-white dark:hover:bg-neutral-900",
+                  )}
+                >
+                  Log in
+                </Link>
               ) : null}
             </div>
           </div>
