@@ -104,6 +104,9 @@ module.exports = withPlausibleProxy({
       {
         hostname: "short.sngll.org",
       },
+      {
+        hostname: "storage.silo.sngll.org", // self-hosted user generated images
+      },
     ],
   },
   async headers() {
