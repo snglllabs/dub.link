@@ -13,8 +13,10 @@ export const API_HOSTNAMES = new Set([
   "api.localhost",
 ]);
 
-export const API_DOMAIN =
-  process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+// Self-hosted deployments serve the API on the same origin as the app.
+export const API_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN
+  ? APP_ORIGIN
+  : process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
     ? "https://api.dub.co"
     : process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
       ? "https://api-staging.dub.co"
@@ -45,4 +47,9 @@ export const ACME_WORKSPACE_ID = "clrei1gld0002vs9mzn93p8ik";
 export const LEGAL_WORKSPACE_ID = "clrflia0j0000vs7sqfhz9c7q";
 export const LEGAL_USER_ID = "clqei1lgc0000vsnzi01pbf47";
 
-export const R2_URL = process.env.STORAGE_BASE_URL || "https://dubassets.com";
+// NEXT_PUBLIC_* is inlined into client bundles at build time, so self-hosted
+// images must be configured through it (STORAGE_BASE_URL is server-only).
+export const R2_URL =
+  process.env.NEXT_PUBLIC_STORAGE_BASE_URL ||
+  process.env.STORAGE_BASE_URL ||
+  "https://dubassets.com";
