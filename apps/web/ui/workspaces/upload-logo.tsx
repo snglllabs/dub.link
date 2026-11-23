@@ -24,15 +24,23 @@ export default function UploadLogo() {
   return (
     <form
       onSubmit={async (e) => {
-        setUploading(true);
         e.preventDefault();
-        fetch(`/api/workspaces/${id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ logo: image }),
-        }).then(async (res) => {
+
+        if (!image) {
+          return;
+        }
+
+        setUploading(true);
+
+        try {
+          const res = await fetch(`/api/workspaces/${id}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ logo: image }),
+          });
+
           if (res.status === 200) {
             await Promise.all([
               mutate("/api/workspaces"),
@@ -40,11 +48,19 @@ export default function UploadLogo() {
             ]);
             toast.success("Successfully uploaded workspace logo!");
           } else {
-            const { error } = await res.json();
-            toast.error(error.message);
+            const data = await res.json().catch(() => null);
+            toast.error(
+              data?.error?.message ||
+                "Failed to update workspace logo. Please try again.",
+            );
           }
+        } catch {
+          toast.error(
+            "Failed to update workspace logo. Please try again.",
+          );
+        } finally {
           setUploading(false);
-        });
+        }
       }}
       className="rounded-xl border border-neutral-200 bg-white"
     >
