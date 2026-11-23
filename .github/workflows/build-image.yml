@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths-ignore:
       - "**/*.md"
+      - ".github/**"
   workflow_dispatch:
 
 concurrency:
@@ -48,3 +49,15 @@ jobs:
             NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_placeholder
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      # Optional: set repo secret DOKPLOY_DEPLOY_WEBHOOK to make deploys automatic.
+      - name: Trigger Dokploy deploy
+        continue-on-error: true
+        env:
+          DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK }}
+        run: |
+          if [ -n "$DOKPLOY_DEPLOY_WEBHOOK" ]; then
+            curl -fsS -X POST "$DOKPLOY_DEPLOY_WEBHOOK"
+          else
+            echo "DOKPLOY_DEPLOY_WEBHOOK not set; skipping (image pushed, deploy manually in Dokploy)."
+          fi
